@@ -1,0 +1,36 @@
+import { send, setErrmsg } from "../../helper/responsehelper.js";
+import { RESPONSE } from "../../config/global.js";
+import { Router } from "express";
+import initadminmodel from "../../model/admin.js";
+
+const route = Router();
+
+route.get("/", async (req, res) => {
+  try {
+    const user = await initadminmodel();
+
+    const { name, email, password, phone,  gender, address } = req.query;
+
+    let whereCondition = {};
+
+    if (name) whereCondition.name = name;
+    if (email) whereCondition.email = email;
+    if (password) whereCondition.password = password;
+    if (phone) whereCondition.phone = phone;
+    if (gender) whereCondition.gender = gender;
+    if (address) whereCondition.address = address;
+
+    const data = await user.findAll({
+      where: whereCondition,
+    });
+    return send(res, RESPONSE.SUCCESS, {
+      count: data.length,
+      data: data,
+    });
+  } catch (error) {
+    console.error(error);
+    return send(res, setErrmsg(RESPONSE.ERROR, error.message));
+  }
+});
+
+export default route;

@@ -11,7 +11,7 @@ router.post("/", async (req, res) => {
     console.log("ADMIN REGISTER HIT");
     console.log("BODY:", req.body);
 
-    const { name, email, password, phone, gender, address } = req.body || {};
+    const { name, email, password, phone, gender, address } = req.query || {};
 
     if (!name || !email || !password || !phone || !gender || !address) {
       return send(
